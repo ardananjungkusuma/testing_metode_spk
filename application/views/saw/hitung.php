@@ -65,7 +65,7 @@
                                 <?php for ($i = 1; $i <= count($kriteria); $i++) {
                                 ?>
                                     <th>
-                                        <input type="number" required id="P<?= $no ?>C<?= $i ?>" value="<?= rand(1, 100) ?>">
+                                        <input type="number" required id="P<?= $no ?>C<?= $i ?>">
                                     </th>
                                 <?php
                                 } ?>
@@ -110,26 +110,6 @@
         noUrut -= noUrut;
 
         console.log(kategori_bobot);
-
-        // var noUntukKategori = 0;
-        // window['minmaxcategory'] = [];
-        // // find max min depends on benefit
-        // for (let j = 1; j <= jumlahKriteria; j++) {
-        //     window['category' + j] = [];
-        //     for (let i = 1; i <= jumlahPegawai; i++) {
-        //         window['category' + j].push(window['P' + i + 'C' + j]);
-        //     }
-        //     if (kategori_bobot[noUntukKategori] == "Benefit") {
-        //         console.log(window['category' + j])
-        //         window['minmaxcategory'].push(Math.max.apply(Math, window['category' + j]));
-        //     } else if (kategori_bobot[noUntukKategori] == "Cost") {
-        //         console.log(window['category' + j])
-        //         window['minmaxcategory'].push(Math.min.apply(Math, window['category' + j]));
-        //     }
-        //     noUntukKategori++;
-        // }
-
-        // noUntukKategori -= noUntukKategori;
 
         var noUntukKategori = 0;
         window['minmaxcategory'] = [];
@@ -179,10 +159,31 @@
             noUrut++;
         }
         noUrut -= noUrut;
+
+        var backToZero = 0;
+        var hasilKali = [];
+        var finalData = [];
+        var hitungTabelFaktor;
         for (let i = 1; i <= jumlahPegawai; i++) {
-            console.log(window['dataNormalisasiPerPegawai' + i]);
+            for (let j = 1; j <= jumlahKriteria; j++) {
+                console.log(window['dataNormalisasiPerPegawai' + i][backToZero] + '*' + window['B' + j]);
+                hitungTabelFaktor = window['dataNormalisasiPerPegawai' + i][backToZero] * window['B' + j];
+                // console.log(window['dataNormalisasiPerPegawai' + i]);
+                hasilKali.push(hitungTabelFaktor);
+                console.log("Hasilnya : " + hitungTabelFaktor);
+                hitungTabelFaktor = 0;
+                backToZero++;
+            }
+            var sum = hasilKali.reduce(function(a, b) {
+                return a + b;
+            }, 0);
+
+            // console.log(hitungTabelFaktor);
+            finalData.push(sum);
+            hasilKali = [];
+            backToZero -= backToZero;
         }
 
-
+        console.log(finalData);
     }
 </script>
