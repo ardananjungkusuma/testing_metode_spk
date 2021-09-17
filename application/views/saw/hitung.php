@@ -15,6 +15,7 @@
                     <script>
                         var bobot = [];
                         var kategori_bobot = [];
+                        var nama_pegawai = [];
                     </script>
                     <?php
                     $no = 1;
@@ -61,6 +62,9 @@
                         ?>
                             <tr>
                                 <td><?= $no ?></td>
+                                <script>
+                                    nama_pegawai.push('<?= $p['nama_pegawai'] ?>');
+                                </script>
                                 <td><?= $p['nama_pegawai'] ?></td>
                                 <?php for ($i = 1; $i <= count($kriteria); $i++) {
                                 ?>
@@ -76,7 +80,14 @@
                         ?>
                     </tbody>
                 </table>
-                <input type="submit" value="Hitung Data" class="btn btn-info" onclick="return hitungData();" />
+                <input type="submit" value="Hitung Data" id="hitung_data" class="btn btn-info" onclick="return hitungData();" />
+        </div>
+        <div class="col-lg-12" id="tabel_normalisasi">
+
+        </div>
+
+        <div class="col-lg-12" id="tabel_faktor_ternormalisasi">
+
         </div>
     <?php }
     ?>
@@ -84,6 +95,10 @@
 </div>
 <script>
     function hitungData() {
+
+        var element = document.getElementById("hitung_data"); // notice the change
+        element.parentNode.removeChild(element);
+
         let jumlahPegawai = <?= count($pegawai) ?>;
         let jumlahKriteria = <?= count($kriteria) ?>;
 
@@ -133,6 +148,7 @@
 
         console.log(minmaxcategory);
 
+        // normalisasi
         var urutanMinMax = 0;
         for (let j = 1; j <= jumlahKriteria; j++) {
             for (let i = 1; i <= jumlahPegawai; i++) {
@@ -141,15 +157,12 @@
                     window['NP' + i + 'NC' + j] = window['P' + i + 'C' + j] / minmaxcategory[urutanMinMax];
                 } else if (kategori_bobot[j - 1] == "Cost") {
                     window['NP' + i + 'NC' + j] = minmaxcategory[urutanMinMax] / window['P' + i + 'C' + j];
-                    // console.log(minmaxcategory[urutanMinMax]);
-                    // console.log("dibagi");
-                    // console.log(window['P' + i + 'C' + j]);
                 }
-                // console.log(window['NP' + i + 'NC' + j]);
             }
             urutanMinMax++;
         }
 
+        // Add hasil normalisasi to array
         var noUrut = 1;
         for (let i = 1; i <= jumlahPegawai; i++) {
             window['dataNormalisasiPerPegawai' + i] = [];
@@ -160,17 +173,35 @@
         }
         noUrut -= noUrut;
 
+
+        var html = `<br><h3>Tabel Normalisasi</h3><table class="table table-bordered">`;
+        for (let i = 1; i <= jumlahPegawai; i++) {
+            html += `<tr>`;
+            html += `<td>C${i}</td>`;
+            for (let j = 0; j < window['dataNormalisasiPerPegawai' + i].length; j++) {
+                html += `<td>`;
+                html += window['dataNormalisasiPerPegawai' + i][j];
+                html += `</td>`;
+            }
+            html += `</tr>`;
+        }
+        html += `</table>`;
+        document.getElementById("tabel_normalisasi").innerHTML = html;
+
+        var html = ``;
+
+        // final penghitungan tabel ternormalisasi
         var backToZero = 0;
         var hasilKali = [];
         var finalData = [];
         var hitungTabelFaktor;
         for (let i = 1; i <= jumlahPegawai; i++) {
             for (let j = 1; j <= jumlahKriteria; j++) {
-                console.log(window['dataNormalisasiPerPegawai' + i][backToZero] + '*' + window['B' + j]);
+                // console.log(window['dataNormalisasiPerPegawai' + i][backToZero] + '*' + window['B' + j]);
                 hitungTabelFaktor = window['dataNormalisasiPerPegawai' + i][backToZero] * window['B' + j];
                 // console.log(window['dataNormalisasiPerPegawai' + i]);
                 hasilKali.push(hitungTabelFaktor);
-                console.log("Hasilnya : " + hitungTabelFaktor);
+                // console.log("Hasilnya : " + hitungTabelFaktor);
                 hitungTabelFaktor = 0;
                 backToZero++;
             }
@@ -184,6 +215,25 @@
             backToZero -= backToZero;
         }
 
-        console.log(finalData);
+        var terpilih = Math.max.apply(Math, finalData);
+        var html = `<br><h3>Tabel Faktor Ternormalisasi</h3><table class="table table-bordered">`;
+        for (let i = 0; i < finalData.length; i++) {
+            html += `<tr>
+            <td>${nama_pegawai[i]}</td>
+            `;
+            if (finalData[i] == terpilih) {
+                data = finalData[i] + ' <span style="color:red">(Pegawai Terpilih)</span>';
+            } else {
+                data = finalData[i];
+            }
+            html += `<td>${data}</td>
+            </tr>`
+        }
+        html += `</table>`;
+        document.getElementById("tabel_faktor_ternormalisasi").innerHTML = html;
+
+
+
+
     }
 </script>
