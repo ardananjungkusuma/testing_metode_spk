@@ -110,41 +110,63 @@
         noUrut -= noUrut;
 
         console.log(kategori_bobot);
+
+        // var noUntukKategori = 0;
+        // window['minmaxcategory'] = [];
+        // // find max min depends on benefit
+        // for (let j = 1; j <= jumlahKriteria; j++) {
+        //     window['category' + j] = [];
+        //     for (let i = 1; i <= jumlahPegawai; i++) {
+        //         window['category' + j].push(window['P' + i + 'C' + j]);
+        //     }
+        //     if (kategori_bobot[noUntukKategori] == "Benefit") {
+        //         console.log(window['category' + j])
+        //         window['minmaxcategory'].push(Math.max.apply(Math, window['category' + j]));
+        //     } else if (kategori_bobot[noUntukKategori] == "Cost") {
+        //         console.log(window['category' + j])
+        //         window['minmaxcategory'].push(Math.min.apply(Math, window['category' + j]));
+        //     }
+        //     noUntukKategori++;
+        // }
+
+        // noUntukKategori -= noUntukKategori;
+
         var noUntukKategori = 0;
         window['minmaxcategory'] = [];
         // find max min depends on benefit
-        for (let j = 1; j <= jumlahKriteria; j++) {
-            window['category' + j] = [];
-            for (let i = 1; i <= jumlahPegawai; i++) {
-                window['category' + j].push(window['P' + i + 'C' + j]);
+        for (let i = 1; i <= jumlahKriteria; i++) {
+            window['category' + i] = [];
+            for (let j = 1; j <= jumlahPegawai; j++) {
+                window['category' + i].push(window['P' + j + 'C' + i]);
             }
             if (kategori_bobot[noUntukKategori] == "Benefit") {
-                console.log(window['category' + j])
-                window['minmaxcategory'].push(Math.max.apply(Math, window['category' + j]));
+                console.log(window['category' + i])
+                window['minmaxcategory'].push(Math.max.apply(Math, window['category' + i]));
             } else if (kategori_bobot[noUntukKategori] == "Cost") {
-                console.log(window['category' + j])
-                window['minmaxcategory'].push(Math.min.apply(Math, window['category' + j]));
+                console.log(window['category' + i])
+                window['minmaxcategory'].push(Math.min.apply(Math, window['category' + i]));
             }
             noUntukKategori++;
         }
 
         noUntukKategori -= noUntukKategori;
 
-        // console.log(minmaxcategory);
+        console.log(minmaxcategory);
 
         var urutanMinMax = 0;
         for (let j = 1; j <= jumlahKriteria; j++) {
             for (let i = 1; i <= jumlahPegawai; i++) {
                 // console.log(kategori_bobot[noUntukKategori]);
-                if (kategori_bobot[noUntukKategori] == "Benefit") {
+                if (kategori_bobot[j - 1] == "Benefit") {
                     window['NP' + i + 'NC' + j] = window['P' + i + 'C' + j] / minmaxcategory[urutanMinMax];
-                } else if (kategori_bobot[noUntukKategori] == "Cost") {
+                } else if (kategori_bobot[j - 1] == "Cost") {
                     window['NP' + i + 'NC' + j] = minmaxcategory[urutanMinMax] / window['P' + i + 'C' + j];
+                    // console.log(minmaxcategory[urutanMinMax]);
+                    // console.log("dibagi");
+                    // console.log(window['P' + i + 'C' + j]);
                 }
                 // console.log(window['NP' + i + 'NC' + j]);
-                noUntukKategori++;
             }
-            noUntukKategori -= noUntukKategori;
             urutanMinMax++;
         }
 
@@ -160,14 +182,7 @@
         for (let i = 1; i <= jumlahPegawai; i++) {
             console.log(window['dataNormalisasiPerPegawai' + i]);
         }
-        // console.log(P1C1 / minMaxC1);
-        // console.log(P2C1 / minMaxC1);
-        // console.log(minMaxC1 / P3C1);
-        // console.log(P4C1 / minMax);
 
-        // console.log(P1C2 / minMaxC2);
-        // console.log(P2C2 / minMaxC2);
-        // console.log(minMaxC2 / P3C2);
-        // console.log(P4C2 / minMaxC2);
+
     }
 </script>
