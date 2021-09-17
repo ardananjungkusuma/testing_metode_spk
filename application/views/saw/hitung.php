@@ -69,7 +69,7 @@
                                 <?php for ($i = 1; $i <= count($kriteria); $i++) {
                                 ?>
                                     <th>
-                                        <input type="number" required id="P<?= $no ?>C<?= $i ?>">
+                                        <input type="number" required id="P<?= $no ?>C<?= $i ?>" value="<?= rand(5, 90) ?>">
                                     </th>
                                 <?php
                                 } ?>
@@ -216,6 +216,7 @@
         }
 
         var terpilih = Math.max.apply(Math, finalData);
+        var pegawaiTerpilih;
         var html = `<br><h3>Tabel Faktor Ternormalisasi</h3><table class="table table-bordered">`;
         for (let i = 0; i < finalData.length; i++) {
             html += `<tr>
@@ -223,6 +224,7 @@
             `;
             if (finalData[i] == terpilih) {
                 data = finalData[i] + ' <span style="color:red">(Pegawai Terpilih)</span>';
+                pegawaiTerpilih = nama_pegawai[i];
             } else {
                 data = finalData[i];
             }
@@ -231,9 +233,6 @@
         }
         html += `</table>`;
         document.getElementById("tabel_faktor_ternormalisasi").innerHTML = html;
-
-
-
-
+        console.log(pegawaiTerpilih);
     }
 </script>
